@@ -73,6 +73,7 @@ input.addEventListener('input', debounce(() => {
   }
     fetchCountries(query)
     .then(countries => {
+     
       if (countries.length > 10) {
         showTooManyMatchesAlert();
         return;
@@ -88,3 +89,8 @@ input.addEventListener('input', debounce(() => {
     })
     .catch(error => Notiflix.Notify.failure("Ops, there is no country with that name"))
 }, DEBOUNCE_DELAY));
+
+input.addEventListener('input', () => {
+  list.innerHTML = '';
+  info.innerHTML = '';
+});
