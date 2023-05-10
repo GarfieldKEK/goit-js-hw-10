@@ -3,7 +3,8 @@ import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 import {fetchCountries} from "./fetchCountries.js"
 const DEBOUNCE_DELAY = 300;
-
+const list = document.querySelector('.country-list');
+const info = document.querySelector('.country-info');
 // function fetchCountries(name) {
 //   return fetch(`https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`)
 //     .then(response => {
@@ -22,7 +23,7 @@ const DEBOUNCE_DELAY = 300;
 // }
 
 function renderCountriesList(countries) {
-  const list = document.querySelector('.country-list');
+    info.innerHTML = '';
   list.innerHTML = '';
   countries.forEach(country => {
     const item = document.createElement('li');
@@ -38,7 +39,8 @@ function renderCountriesList(countries) {
 }
 
 function renderCountryInfo(country) {
-  const info = document.querySelector('.country-info');
+    list.innerHTML = ''
+  
   info.innerHTML = '';
   const flag = document.createElement('img');
   flag.src = country.flags.svg;
@@ -50,12 +52,13 @@ function renderCountryInfo(country) {
   const population = document.createElement('p');
   population.textContent = `Population: ${country.population}`;
   const languages = document.createElement('ul');
-  country.languages.forEach(lang => {
+  Object.values(country.languages).forEach(lang => {
     const item = document.createElement('li');
-    item.textContent = lang.name;
+    item.textContent = lang;
     languages.append(item);
   });
   info.append(flag, name, capital, population, languages);
+
 }
 
 function showTooManyMatchesAlert() {
@@ -78,7 +81,10 @@ input.addEventListener('input', debounce(() => {
         renderCountriesList(countries);
         return;
       }
-      renderCountryInfo(countries[0]);
+      if (countries.length === 1){
+        renderCountryInfo(countries[0])
+      }
+      
     })
     .catch(error => Notiflix.Notify.failure("Ops, there is no country with that name"))
 }, DEBOUNCE_DELAY));
